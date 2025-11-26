@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "839692538918",
+    "project_id": "agendacontactos-871f7",
+    "storage_bucket": "agendacontactos-871f7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:839692538918:android:b2b2a1eaea15455d3a02e7",
+        "android_client_info": {
+          "package_name": "com.example.crud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "839692538918-upc2tigu002mn1p3de4kt54r1njhn4uo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.crud",
+            "certificate_hash": "9123c3ed8c96e9b33394771f9dda286026175d73"
+          }
+        },
+        {
+          "client_id": "839692538918-61k1hq21a8763h0m5tt7cjd69s0ob7j5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8RkL4xEchUS4ITya3j4ikVbhCJDyeIfY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "839692538918-61k1hq21a8763h0m5tt7cjd69s0ob7j5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

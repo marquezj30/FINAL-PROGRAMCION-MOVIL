@@ -1,9 +1,16 @@
+// lib/main.dart
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'viewmodels/user_view_model.dart';
-import 'views/login_screen.dart'; // <-- usa login como inicio
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+import 'viewmodels/user_view_model.dart';
+import 'views/login_screen.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();  // <--- IMPORTANTE
+
   runApp(
     ChangeNotifierProvider(
       create: (_) => UserViewModel(),
@@ -20,7 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Gestión de Usuarios',
       theme: ThemeData(primarySwatch: Colors.indigo),
-      home: const LoginScreen(),   // <-- SOLUCIÓN
+      home: const LoginScreen(),
     );
   }
 }
