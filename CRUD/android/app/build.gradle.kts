@@ -27,9 +27,26 @@ android {
         versionName = flutter.versionName
     }
 
+    // Keystore compartido
+    signingConfigs {
+        create("shared") {
+            storeFile = file("shared.keystore")
+            storePassword = "123456"    // la clave que pusiste en keytool
+            keyAlias = "sharedKey"
+            keyPassword = "123456"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig = signingConfigs.getByName("shared")
+            isMinifyEnabled = false
+            isShrinkResources = false
+        }
         release {
-            signingConfig = signingConfigs.getByName("debug")
+            signingConfig = signingConfigs.getByName("shared")
+            isMinifyEnabled = false
+            isShrinkResources = false   // <-- importante para quitar el error
         }
     }
 }
