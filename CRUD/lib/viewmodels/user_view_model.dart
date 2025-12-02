@@ -6,35 +6,43 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user.dart';
 
 class UserViewModel extends ChangeNotifier {
-  final List<User> _usuarios = [];
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  final List<User> _usuarios = [];
   String? _uid;
   StreamSubscription<QuerySnapshot<Map<String, dynamic>>>? _contactosSub;
 
   List<User> get usuarios => List.unmodifiable(_usuarios);
 
+  // Se llama DESPUÉS del login con Google
   void setUser(String uid) {
-    if (_uid == uid) return;
+    if (_uid == uid && _contactosSub != null) return;
+
     _uid = uid;
 
+    // Limpiar datos anteriores y cancelar escucha vieja
     _contactosSub?.cancel();
     _usuarios.clear();
     notifyListeners();
 
-    final ref = _db.collection("users").doc(uid).collection("contacts");
+    // Referencia a: users/{uid}/contacts
+    final ref = _db.collection('users').doc(uid).collection('contacts');
 
     _contactosSub = ref.snapshots().listen((snapshot) {
       _usuarios
         ..clear()
-        ..addAll(snapshot.docs.map((doc) => User.fromMap(doc.id, doc.data())));
+        ..addAll(
+          snapshot.docs.map(
+                (doc) => User.fromMap(doc.id, doc.data()),
+          ),
+        );
       notifyListeners();
     });
   }
 
   Future<void> agregarUsuario(User usuario) async {
     if (_uid == null) return;
-    final ref = _db.collection("users").doc(_uid).collection("contacts");
+    final ref = _db.collection('users').doc(_uid).collection('contacts');
     await ref.add(usuario.toMap());
   }
 
@@ -44,7 +52,12 @@ class UserViewModel extends ChangeNotifier {
     final id = _usuarios[index].id;
     if (id == null) return;
 
-    final ref = _db.collection("users").doc(_uid).collection("contacts").doc(id);
+    final ref = _db
+        .collection('users')
+        .doc(_uid)
+        .collection('contacts')
+        .doc(id);
+
     await ref.update(usuario.toMap());
   }
 
@@ -54,7 +67,12 @@ class UserViewModel extends ChangeNotifier {
     final id = _usuarios[index].id;
     if (id == null) return;
 
-    final ref = _db.collection("users").doc(_uid).collection("contacts").doc(id);
+    final ref = _db
+        .collection('users')
+        .doc(_uid)
+        .collection('contacts')
+        .doc(id);
+
     await ref.delete();
   }
 
@@ -66,4 +84,9 @@ class UserViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  @override
+  void dispose() {
+    _contactosSub?.cancel();
+    super.dispose();
+  }
 }
