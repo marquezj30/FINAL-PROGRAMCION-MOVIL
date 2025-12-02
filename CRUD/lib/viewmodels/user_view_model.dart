@@ -57,4 +57,13 @@ class UserViewModel extends ChangeNotifier {
     final ref = _db.collection("users").doc(_uid).collection("contacts").doc(id);
     await ref.delete();
   }
+
+  void logout() {
+    _uid = null;
+    _contactosSub?.cancel();
+    _contactosSub = null;
+    _usuarios.clear();
+    notifyListeners();
+  }
+
 }
