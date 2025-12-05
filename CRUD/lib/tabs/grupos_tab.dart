@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../viewmodels/user_view_model.dart';
 import '../../models/user.dart';
+import '../views/group_detail_screen.dart';
 
 class GroupsTab extends StatelessWidget {
   const GroupsTab({super.key});
@@ -34,9 +35,11 @@ class GroupsTab extends StatelessWidget {
           child: InkWell(
             borderRadius: BorderRadius.circular(16),
             onTap: () {
-              // Aquí podrías navegar a una pantalla filtrada solo con este grupo
-              ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Filtrando por $categoria... Implementar vista detalle'))
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => GroupDetailScreen(grupo: categoria),
+                ),
               );
             },
             child: Column(
