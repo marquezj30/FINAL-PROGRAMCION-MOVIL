@@ -1,5 +1,5 @@
 // lib/views/login_screen.dart
-
+import '../views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => UserListScreen(email: user.email ?? "Sin correo"),
+          builder: (_) => HomeScreen(email: user.email ?? "Sin correo"),
         ),
       );
     } catch (e) {
