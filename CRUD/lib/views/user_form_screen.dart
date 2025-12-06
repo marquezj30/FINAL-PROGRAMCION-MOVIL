@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart'; // Necesario para eliminar
+import '../viewmodels/user_view_model.dart'; // Necesario para acceder al método eliminar
 import '../models/user.dart';
 
 class UserFormScreen extends StatefulWidget {
@@ -19,7 +21,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
   late String _telefono;
   bool _bloqueado = false;
 
-  // 1. Nuevas variables para el grupo
+  // Variables para el grupo
   String _grupo = 'Otros';
   final List<String> _opcionesGrupos = ['Familia', 'Amigos', 'Trabajo', 'Otros'];
 
@@ -28,14 +30,14 @@ class _UserFormScreenState extends State<UserFormScreen> {
     super.initState();
 
     if (widget.usuario != null) {
+      // Si estamos editando, cargamos los datos existentes
       _nombre = widget.usuario!.nombre;
       _apellido = widget.usuario!.apellido;
       _telefono = widget.usuario!.telefono;
       _bloqueado = widget.usuario!.bloqueado;
-      // 2. Cargar grupo existente si estamos editando
-      // Asegúrate de que tu modelo User ya tenga la propiedad .grupo
-      _grupo = widget.usuario!.grupo;
+      _grupo = widget.usuario!.grupo; // Cargar el grupo guardado
     } else {
+      // Si es nuevo, campos vacíos
       _nombre = '';
       _apellido = '';
       _telefono = '';
@@ -43,7 +45,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
     }
   }
 
-  // Método auxiliar para los iconos (lo ponemos aquí para usarlo en el build)
+  // Método auxiliar para iconos en el selector
   IconData _getIconForGroup(String grupo) {
     switch (grupo) {
       case 'Familia': return Icons.favorite;
@@ -60,23 +62,29 @@ class _UserFormScreenState extends State<UserFormScreen> {
         title: Text(widget.usuario == null
             ? 'Agregar nuevo contacto'
             : 'Editar contacto'),
+        // Botón de eliminar opcional en la barra superior
+        actions: [
+          if (widget.usuario != null)
+            IconButton(
+              icon: const Icon(Icons.delete_outline),
+              onPressed: _confirmarEliminar,
+            )
+        ],
       ),
 
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView( // Agregado por si el teclado tapa el botón
+          child: SingleChildScrollView(
             child: Column(
               children: [
-
                 // NOMBRE
                 TextFormField(
                   initialValue: _nombre,
                   decoration: const InputDecoration(labelText: 'Nombre'),
-                  validator: (value) =>
-                  value == null || value.isEmpty ? 'Ingrese un nombre válido' : null,
-                  onSaved: (value) => _nombre = value!,
+                  validator: (v) => v!.isEmpty ? 'Requerido' : null,
+                  onSaved: (v) => _nombre = v!,
                 ),
 
                 const SizedBox(height: 15),
@@ -85,9 +93,8 @@ class _UserFormScreenState extends State<UserFormScreen> {
                 TextFormField(
                   initialValue: _apellido,
                   decoration: const InputDecoration(labelText: 'Apellido'),
-                  validator: (value) =>
-                  value == null || value.isEmpty ? 'Ingrese un apellido válido' : null,
-                  onSaved: (value) => _apellido = value!,
+                  validator: (v) => v!.isEmpty ? 'Requerido' : null,
+                  onSaved: (v) => _apellido = v!,
                 ),
 
                 const SizedBox(height: 15),
@@ -98,25 +105,21 @@ class _UserFormScreenState extends State<UserFormScreen> {
                   decoration: const InputDecoration(labelText: 'Teléfono'),
                   keyboardType: TextInputType.phone,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Ingrese un teléfono válido';
-                    }
-                    if (value.length < 6) {
-                      return 'Número demasiado corto';
-                    }
+                    if (value == null || value.isEmpty) return 'Ingrese un teléfono';
+                    if (value.length < 6) return 'Número demasiado corto';
                     return null;
                   },
-                  onSaved: (value) => _telefono = value!,
+                  onSaved: (v) => _telefono = v!,
                 ),
 
                 const SizedBox(height: 20),
 
-                // 3. SELECTOR DE GRUPO (DROPDOWN)
+                // SELECTOR DE GRUPOS
                 DropdownButtonFormField<String>(
                   value: _grupo,
                   decoration: const InputDecoration(
                     labelText: 'Grupo / Etiqueta',
-                    border: OutlineInputBorder(), // Un borde suave queda bien aquí
+                    border: OutlineInputBorder(),
                   ),
                   items: _opcionesGrupos.map((String categoria) {
                     return DropdownMenuItem<String>(
@@ -136,42 +139,95 @@ class _UserFormScreenState extends State<UserFormScreen> {
 
                 const SizedBox(height: 20),
 
-                // CONTACTO BLOQUEADO
+                // SWITCH BLOQUEADO
                 SwitchListTile(
                   title: const Text('Contacto bloqueado'),
                   value: _bloqueado,
-                  onChanged: (value) => setState(() => _bloqueado = value),
+                  onChanged: (v) => setState(() => _bloqueado = v),
                 ),
 
-                const SizedBox(height: 25),
+                const SizedBox(height: 30),
 
+                // BOTÓN GUARDAR / ACTUALIZAR (Principal)
                 SizedBox(
-                  width: double.infinity, // Botón ancho completo
+                  width: double.infinity,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        _formKey.currentState!.save();
-
-                        // 4. Actualizamos el objeto User con el grupo seleccionado
-                        final contacto = User(
-                          nombre: _nombre,
-                          apellido: _apellido,
-                          telefono: _telefono,
-                          bloqueado: _bloqueado,
-                          grupo: _grupo, // <--- Importante
-                        );
-
-                        Navigator.pop(context, contacto);
-                      }
-                    },
+                    onPressed: _guardarContacto,
                     child: Text(widget.usuario == null ? 'Guardar' : 'Actualizar'),
                   ),
-                )
+                ),
+
+                // --- BOTÓN ELIMINAR (Solo si estamos editando) ---
+                if (widget.usuario != null) ...[
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: OutlinedButton.icon(
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        side: const BorderSide(color: Colors.red),
+                      ),
+                      icon: const Icon(Icons.delete),
+                      label: const Text('Eliminar Contacto'),
+                      onPressed: _confirmarEliminar,
+                    ),
+                  ),
+                ]
               ],
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  // Lógica para Guardar o Actualizar
+  void _guardarContacto() {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+      final contacto = User(
+        nombre: _nombre,
+        apellido: _apellido,
+        telefono: _telefono,
+        bloqueado: _bloqueado,
+        grupo: _grupo,
+      );
+      Navigator.pop(context, contacto);
+    }
+  }
+
+  // Lógica para Eliminar con confirmación
+  void _confirmarEliminar() {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('¿Eliminar contacto?'),
+        content: Text('¿Seguro que quieres borrar a $_nombre $_apellido? Esta acción no se puede deshacer.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx), // Cerrar alerta
+            child: const Text('Cancelar'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () {
+              // 1. Borramos usando el ViewModel
+              if (widget.indice != null) {
+                Provider.of<UserViewModel>(context, listen: false)
+                    .eliminarUsuario(widget.indice!);
+              }
+
+              // 2. Cerramos la alerta
+              Navigator.pop(ctx);
+
+              // 3. Cerramos la pantalla de formulario devolviendo null
+              Navigator.pop(context, null);
+            },
+            child: const Text('Eliminar', style: TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
     );
   }
