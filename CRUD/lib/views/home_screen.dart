@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../viewmodels/user_view_model.dart';
-import '../tabs/contactos_tab.dart'; // Crearemos esto abajo
-import '../tabs/grupos_tab.dart';   // Crearemos esto abajo
-import '../tabs/perfil_tab.dart';  // Crearemos esto abajo
+import '../tabs/contactos_tab.dart';
+import '../tabs/grupos_tab.dart';
+import '../tabs/perfil_tab.dart';
 import '../models/user.dart';
 import 'user_form_screen.dart';
 
@@ -24,8 +24,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     // Las 3 vistas principales
     final List<Widget> pages = [
-      const ContactsTab(),          // Pestaña 0: Lista completa
-      const GroupsTab(),            // Pestaña 1: Por grupos
+      const ContactsTab(),          // Pestaña 0: Lista completa de contactos
+      const GroupsTab(),            // Pestaña 1: Lista Mostrada Por grupos
       ProfileTab(email: widget.email), // Pestaña 2: Perfil y Logout
     ];
 
@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       body: pages[_currentIndex],
 
-      // SOLO mostramos el botón flotante en la pestaña de Contactos (índice 0)
+      // SOLO mostramos el botón flotante para crear "Nuevo Contacto" en la pestaña de Contactos
       floatingActionButton: _currentIndex == 0
           ? FloatingActionButton.extended(
         icon: const Icon(Icons.person_add),

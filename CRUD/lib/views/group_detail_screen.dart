@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../viewmodels/user_view_model.dart';
 import '../models/user.dart';
 import 'user_form_screen.dart';
-import '../widgets/qr_dialogo.dart'; // Asegúrate de importar esto
+import '../widgets/qr_dialogo.dart';
 
 class GroupDetailScreen extends StatelessWidget {
   final String grupo;
@@ -87,8 +87,7 @@ class GroupDetailScreen extends StatelessWidget {
                         Text(user.telefono),
                       ],
                     ),
-
-                    // AQUÍ ESTÁ EL ARREGLO DEL QR
+                    // QR
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -146,7 +145,7 @@ class GroupDetailScreen extends StatelessWidget {
     );
   }
 
-  // Lógica de colores centralizada
+  // Lógica de colores
   Color _getColorForGroup(String grupo) {
     switch (grupo) {
       case 'Familia': return Colors.pinkAccent;

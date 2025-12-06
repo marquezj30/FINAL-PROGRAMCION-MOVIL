@@ -4,8 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:google_sign_in/google_sign_in.dart';
 import '../../viewmodels/user_view_model.dart';
 import '../views/login_screen.dart';
-import '../models/user.dart';        // Necesario para crear el usuario temporal
-import '../widgets/qr_dialogo.dart';  // Importamos el widget nuevo
+import '../models/user.dart';
+import '../widgets/qr_dialogo.dart';
 
 class ProfileTab extends StatelessWidget {
   final String email;
@@ -13,7 +13,7 @@ class ProfileTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView( // Por si la pantalla es chica
+    return SingleChildScrollView(
       child: Center(
         child: Padding(
           padding: const EdgeInsets.all(20.0),
@@ -33,7 +33,7 @@ class ProfileTab extends StatelessWidget {
               ),
               const SizedBox(height: 40),
 
-              // --- BOTÓN NUEVO: Compartir mi perfil ---
+              // BOTÓN COMPARTIR MI PERFIL
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton.icon(
@@ -52,7 +52,7 @@ class ProfileTab extends StatelessWidget {
               const Divider(),
               const SizedBox(height: 20),
 
-              // Botón Cerrar Sesión
+              // BOTON CERRAR SESIÓN
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(

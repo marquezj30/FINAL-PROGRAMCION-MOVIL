@@ -28,7 +28,7 @@ class GroupsTab extends StatelessWidget {
               crossAxisCount: 2,
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
-              childAspectRatio: 1.1, // Tarjetas un poco más cuadradas
+              childAspectRatio: 1.1,
             ),
             itemCount: grupos.length,
             itemBuilder: (context, index) {

@@ -65,7 +65,7 @@ class _ContactsTabState extends State<ContactsTab> {
             itemBuilder: (context, index) {
               final user = contactos[index];
 
-              // 1. OBTENER COLOR SEGÚN EL GRUPO
+              // 1. OBTENER COLOR SEGÚN EL GRUPO AL QUE PERTENECE EL CONTACTO
               final colorGrupo = _getColorForGroup(user.grupo);
 
               return Card(

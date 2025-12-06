@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart'; // Necesario para eliminar
-import '../viewmodels/user_view_model.dart'; // Necesario para acceder al método eliminar
+import 'package:provider/provider.dart';
+import '../viewmodels/user_view_model.dart';
 import '../models/user.dart';
 
 class UserFormScreen extends StatefulWidget {
@@ -45,7 +45,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
     }
   }
 
-  // Método auxiliar para iconos en el selector
+  // Iconos para el grupo al que pertenece el contacto
   IconData _getIconForGroup(String grupo) {
     switch (grupo) {
       case 'Familia': return Icons.favorite;
@@ -139,7 +139,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
 
                 const SizedBox(height: 20),
 
-                // SWITCH BLOQUEADO
+                // SWITCH BOTON BLOQUEADO
                 SwitchListTile(
                   title: const Text('Contacto bloqueado'),
                   value: _bloqueado,
@@ -148,7 +148,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
 
                 const SizedBox(height: 30),
 
-                // BOTÓN GUARDAR / ACTUALIZAR (Principal)
+                // BOTÓN PARA GUARDAR / ACTUALIZAR
                 SizedBox(
                   width: double.infinity,
                   height: 50,
@@ -158,7 +158,7 @@ class _UserFormScreenState extends State<UserFormScreen> {
                   ),
                 ),
 
-                // --- BOTÓN ELIMINAR (Solo si estamos editando) ---
+                // BOTÓN ELIMINAR SE MUESTRA CUANDO SE ACTUALIZA UN CONTACTO
                 if (widget.usuario != null) ...[
                   const SizedBox(height: 20),
                   SizedBox(
