@@ -5,6 +5,7 @@ class User {
   String apellido;
   String telefono;
   bool bloqueado;
+  String grupo;
 
   User({
     this.id,
@@ -12,6 +13,7 @@ class User {
     required this.apellido,
     required this.telefono,
     required this.bloqueado,
+    this.grupo = 'Otros',
   });
 
   // Para guardar en Firestore
@@ -21,6 +23,7 @@ class User {
       'apellido': apellido,
       'telefono': telefono,
       'bloqueado': bloqueado,
+      'grupo': grupo,
     };
   }
 
@@ -32,6 +35,7 @@ class User {
       apellido: map['apellido'] ?? '',
       telefono: map['telefono'] ?? '',
       bloqueado: map['bloqueado'] ?? false,
+      grupo: map['grupo']?? 'Otros',
     );
   }
 }

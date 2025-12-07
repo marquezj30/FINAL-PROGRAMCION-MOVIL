@@ -1,12 +1,10 @@
-// lib/views/login_screen.dart
-
+import '../views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../viewmodels/user_view_model.dart';
-import 'user_list_screen.dart';
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -60,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-          builder: (_) => UserListScreen(email: user.email ?? "Sin correo"),
+          builder: (_) => HomeScreen(email: user.email ?? "Sin correo"),
         ),
       );
     } catch (e) {
